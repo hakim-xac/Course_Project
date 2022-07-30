@@ -8,8 +8,17 @@ namespace KHAS {
         // добавляет отформатированные строки в буфер
         using namespace std::literals;
         pushToBuffer(delimiter('='));
-        pushToBuffer(bufferItem("Лабораторная работа:"s, "номер 3"s));
-        pushToBuffer(bufferItem("Тема:"s, "Двоичное Б-дерево поиска (ДБД)"s));
+        pushToBuffer(bufferItem("Структуры и алгоритмы обработки данных (часть 2)"s));
+        pushToBuffer(delimiter('-'));
+        pushToBuffer(bufferItem("Курсовой проект:"s));
+        pushToBuffer(delimiter('-'));
+        pushToBuffer(bufferItem("Вариант:"s, "1"s));
+        pushToBuffer(delimiter('-'));
+        pushToBuffer(bufferItem("Номер базы данных:"s, "A = 1"s));
+        pushToBuffer(delimiter('-'));
+        pushToBuffer(bufferItem("Номер задания:"s, "B = 1.2"s));
+        pushToBuffer(delimiter('-'));
+        pushToBuffer(bufferItem("Тип дерева поиска:"s, "D = 1"s));
         pushToBuffer(delimiter('-'));
         pushToBuffer(bufferItem("Выполнил студент:"s, "Хакимов А.С."s));
         pushToBuffer(delimiter('='));
@@ -89,7 +98,7 @@ namespace KHAS {
     void Interface::view()
     {
         // запускает цикл и выполняет команды полученные от пользователя
-        while (true) {
+        //while (true) {
 
             // очищает экран
             system("cls");
@@ -104,11 +113,11 @@ namespace KHAS {
             showStatusBar();
 
             // выводит меню пользователю
-            showMenu();
+            //showMenu();
 
             // получает команду от пользователя
-            readCommand();
-        }
+            //readCommand();
+        //}
     }
 
 }

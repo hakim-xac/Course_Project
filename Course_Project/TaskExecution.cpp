@@ -1,154 +1,57 @@
 #include "TaskExecution.h"
+#include <Windows.h>
 
 namespace KHAS {
-    std::pair<BinaryTree*, BinaryTree*> TaskExecution::create(int count_tree)
-    {
-        return { nullptr, nullptr };
-        /*BinaryTree* avl_tree{ new (std::nothrow) BinaryTree(count_tree) };
-
-        if (!avl_tree) return { nullptr, nullptr };
-
-        BinaryTree* dbd_tree{ new (std::nothrow) BinaryTree(avl_tree) };
-
-        if (!dbd_tree) {
-            avl_tree->deleteTree();
-            return { nullptr, nullptr };
-        }
-
-        return { avl_tree, dbd_tree };*/
-    }
 
     bool TaskExecution::checkIsTree()
     {
-        return (avlTree100_ != nullptr && avlTree200_ != nullptr
-            && avlTree300_ != nullptr && avlTree400_ != nullptr
-            && avlTree500_ != nullptr && dbdTree100_ != nullptr
-            && dbdTree200_ != nullptr && dbdTree300_ != nullptr
-            && dbdTree400_ != nullptr && dbdTree500_ != nullptr
-            );
-    }
-
-    BinaryTree* TaskExecution::selectTree(int index) const
-    {
-        BinaryTree* bt{ nullptr };
-        switch (index) {
-        case 1:     bt = avlTree100_;  break;
-        case 2:     bt = avlTree200_;  break;
-        case 3:     bt = avlTree300_;  break;
-        case 4:     bt = avlTree400_;  break;
-        case 5:     bt = avlTree500_;  break;
-        case 6:     bt = dbdTree100_;  break;
-        case 7:     bt = dbdTree200_;  break;
-        case 8:     bt = dbdTree300_;  break;
-        case 9:     bt = dbdTree400_;  break;
-        case 0:     bt = dbdTree500_;  break;
-        default:    bt = nullptr;
-        }
-        return bt;
-    }
-
-    BinaryTree* TaskExecution::selectTreeView()
-    {
-        using namespace std::literals;
-        int index{};
-        bool start{};
-        bool isSelectBase{};
-        BinaryTree* bt{ nullptr };
-        while (!isSelectBase || !start || std::cin.fail()) {
-            std::cin.clear();
-            if (start) {
-                push(bufferItem("Ошибка ввода!"s));
-                push(bufferItem("Повторите ввод!"s));
-                std::cin.get();
-            }
-            push(delimiter('-'));
-            push(bufferItem("Введите число от 0 до 9, в каком дереве хотим искать:"s));
-            push(delimiter('-'));
-            push(bufferItem("1 -"s, "АВЛ дерево размером в 100 элементов"s));
-            push(bufferItem("2 -"s, "АВЛ дерево размером в 200 элементов"s));
-            push(bufferItem("3 -"s, "АВЛ дерево размером в 300 элементов"s));
-            push(bufferItem("4 -"s, "АВЛ дерево размером в 400 элементов"s));
-            push(bufferItem("5 -"s, "АВЛ дерево размером в 500 элементов"s));
-            push(delimiter('-'));
-            push(bufferItem("6 -"s, "ДБД дерево размером в 100 элементов"s));
-            push(bufferItem("7 -"s, "ДБД дерево размером в 200 элементов"s));
-            push(bufferItem("8 -"s, "ДБД дерево размером в 300 элементов"s));
-            push(bufferItem("9 -"s, "ДБД дерево размером в 400 элементов"s));
-            push(bufferItem("0 -"s, "ДБД дерево размером в 500 элементов"s));
-            push(delimiter('-'));
-            showStatusBar();
-            std::cin >> index;
-            start = true;
-            if (bt = selectTree(index)) isSelectBase = true;
-        }
-
-        std::cin.get();
-        return bt;
+        return (avlTree_ != nullptr);
     }
 
     void TaskExecution::functionLaunch()
     {
-        // проверяет созданные деревья на валидность
-        if (!checkIsTree()) {
-            system("cls");
-            std::cout << "Внимание! не удалось выделить память из кучи под данные!";
-            exit(1);
+
+    }
+
+    std::pair<DatabaseEntry, bool> TaskExecution::fromFileToDatabaseEntry(FILE* fn)
+    {
+
+        DatabaseEntry db{};
+        if (!readFromStream(fn, db.author, sizeof(db.author) - 1)
+            || !readFromStream(fn, db.header, sizeof(db.header) - 1)
+            || !readFromStream(fn, db.publishing_house, sizeof(db.publishing_house) - 1)
+            || !readFromStream(fn, db.year, sizeof(db.year))
+            || !readFromStream(fn, db.pages_count, sizeof(db.pages_count))
+            ) {
+            return {db, false };
         }
 
-        // выполняет определенную пользователем команду
-        switch (getActiveCommand()) {
-        case InputCommand::Print:       printView();    break;
-        case InputCommand::Exit:        quit();         break;
-        default: break;
-        }
+        return { changingFieldEncoding(std::move(db)), true };
+    }
 
-        // очистка команды
-        clearActiveCommand();
+    DatabaseEntry TaskExecution::changingFieldEncoding(DatabaseEntry&& db)
+    {
+        DatabaseEntry db2{};
+        OemToCharBuffA(db.author, db2.author, sizeof db2.author);
+        OemToCharBuffA(db.header, db2.header, sizeof db2.header);
+        OemToCharBuffA(db.publishing_house, db2.publishing_house, sizeof db2.publishing_house);
+        db2.year = db.year;
+        db2.pages_count = db.pages_count;
+        return db2;
     }
 
     TaskExecution
         ::TaskExecution()
         : Interface()
-        , avlTree100_(nullptr), avlTree200_(nullptr)
-        , avlTree300_(nullptr), avlTree400_(nullptr)
-        , avlTree500_(nullptr), dbdTree100_(nullptr)
-        , dbdTree200_(nullptr), dbdTree300_(nullptr)
-        , dbdTree400_(nullptr), dbdTree500_(nullptr) {
-
-        // создает необходимые деревья
-        std::tie(avlTree100_, dbdTree100_) = create(100);
-        std::tie(avlTree200_, dbdTree200_) = create(200);
-        std::tie(avlTree300_, dbdTree300_) = create(300);
-        std::tie(avlTree400_, dbdTree400_) = create(400);
-        std::tie(avlTree500_, dbdTree500_) = create(500);
-
-    }
+        , vec_db_()
+        , avlTree_(create("BASE1.DAT")) { }
 
     TaskExecution::~TaskExecution()
     {
         // очищает деревья и обнуляет указатели
-        avlTree100_->deleteTree();
-        avlTree200_->deleteTree();
-        avlTree300_->deleteTree();
-        avlTree400_->deleteTree();
-        avlTree500_->deleteTree();
-        dbdTree100_->deleteTree();
-        dbdTree200_->deleteTree();
-        dbdTree300_->deleteTree();
-        dbdTree400_->deleteTree();
-        dbdTree500_->deleteTree();
-
-        delete avlTree100_;     delete dbdTree100_;
-        delete avlTree200_;     delete dbdTree200_;
-        delete avlTree300_;     delete dbdTree300_;
-        delete avlTree400_;     delete dbdTree400_;
-        delete avlTree500_;     delete dbdTree500_;
-
-        avlTree100_ = nullptr;  dbdTree100_ = nullptr;
-        avlTree200_ = nullptr;  dbdTree200_ = nullptr;
-        avlTree300_ = nullptr;  dbdTree300_ = nullptr;
-        avlTree400_ = nullptr;  dbdTree400_ = nullptr;
-        avlTree500_ = nullptr;  dbdTree500_ = nullptr;
+        avlTree_->deleteTree();
+        delete avlTree_;
+        avlTree_ = nullptr;
     }
 
     void TaskExecution::quit() const
@@ -159,7 +62,7 @@ namespace KHAS {
 
     void TaskExecution::printView()
     {
-        BinaryTree* bt{ selectTreeView() };
+        BinaryTree* bt{ avlTree_ };
         print(bt);
     }
 
