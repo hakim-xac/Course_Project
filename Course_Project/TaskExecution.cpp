@@ -1,5 +1,9 @@
 #include "TaskExecution.h"
 #include <Windows.h>
+#include <algorithm>
+#include <vector>
+#include <array>
+#include <cassert>
 
 namespace KHAS {
 
@@ -10,20 +14,16 @@ namespace KHAS {
 
     void TaskExecution::functionLaunch()
     {
-
+        //printView();
+        printViewCourceTask();
     }
 
-    std::pair<DatabaseEntry, bool> TaskExecution::fromFileToDatabaseEntry(FILE* fn)
+    std::pair<DatabaseEntry, bool> TaskExecution::fromFileToDatabaseEntry(std::ifstream& in)
     {
-
         DatabaseEntry db{};
-        if (!readFromStream(fn, db.author, sizeof(db.author) - 1)
-            || !readFromStream(fn, db.header, sizeof(db.header) - 1)
-            || !readFromStream(fn, db.publishing_house, sizeof(db.publishing_house) - 1)
-            || !readFromStream(fn, db.year, sizeof(db.year))
-            || !readFromStream(fn, db.pages_count, sizeof(db.pages_count))
-            ) {
-            return {db, false };
+        in >> db;
+        if (in.fail()) {
+            return { db, false };
         }
 
         return { changingFieldEncoding(std::move(db)), true };
@@ -40,11 +40,33 @@ namespace KHAS {
         return db2;
     }
 
+    std::vector<DatabaseEntry> TaskExecution::uniqueDatabaseEntry(const std::vector<DatabaseEntry>& vec)
+    {
+        assert(vec.size() != 0);
+        std::vector<DatabaseEntry> arr;
+        arr.reserve(vec.size());
+        for (auto&& from : vec) {
+            bool is_unique{ true };
+            for (auto&& to : arr) {
+                if (strcmp(from.publishing_house, to.publishing_house) == 0) {
+                    is_unique = false;
+                    break;
+                }
+            }
+            if (is_unique) arr.emplace_back(from);
+        }
+        arr.shrink_to_fit();
+
+        return arr;
+    }
+
     TaskExecution
         ::TaskExecution()
         : Interface()
         , vec_db_()
-        , avlTree_(create("BASE1.DAT")) { }
+        , avlTree_(create("BASE1.DAT")) { 
+    
+    }
 
     TaskExecution::~TaskExecution()
     {
@@ -62,8 +84,42 @@ namespace KHAS {
 
     void TaskExecution::printView()
     {
-        BinaryTree* bt{ avlTree_ };
-        print(bt);
+        print(avlTree_);
+    }
+
+    void TaskExecution::printViewCourceTask()
+    {
+        using namespace std::literals;
+
+        std::vector<DatabaseEntry> arr{ uniqueDatabaseEntry(vec_db_) };
+        push(delimiter('='));
+        push(bufferItem("Данные о количестве и названиях всех издательств"s));
+        push(delimiter('='));
+
+        push(bufferItem("Количество уникальных издательств:"s, std::to_string(arr.size())));
+        push(delimiter('='));
+
+        if (arr.size() == 0) {
+            push(bufferItem("Список издательств пуст!"s));
+            return;
+        }
+        push(bufferItem("Список уникальных издательств"s));
+        push(delimiter('-'));
+        
+
+        const int deliter{ 3 };
+        for (size_t i{}, ie{ arr.size() / deliter }; i < ie + 1; ++i) {
+
+            std::array<std::string, deliter> tmp_arr{};
+
+            for (int j{}, je{ deliter }; j < je; ++j) {
+
+                auto index{ i * deliter + j };
+                if(index < arr.size()) tmp_arr[j] = std::string(arr[index].publishing_house);
+
+            }
+            push(bufferItem(tmp_arr[0], tmp_arr[1], tmp_arr[2]));
+        }
     }
 
     void TaskExecution::showMenu() const

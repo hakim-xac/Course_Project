@@ -11,6 +11,14 @@ add_executable (Course_Project
 "Interface.cpp"
 "Interface.h"
 "TaskExecution.cpp"
-"TaskExecution.h" "BinaryTree.h" "DataBase.h" "DataBase.cpp" "TaskExecution.hpp" )
+"TaskExecution.h"
+"BinaryTree.h"
+"DataBase.h"
+"DataBase.cpp"
+"TaskExecution.hpp"
+"BinaryTree.cpp"
+"Node.h"
+"Node.cpp"
+ "Interface.hpp")
 
 # TODO: Добавьте тесты и целевые объекты, если это необходимо.

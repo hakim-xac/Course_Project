@@ -65,12 +65,17 @@ namespace KHAS {
         std::flush(std::cout);
     }
 
+    size_t Interface::getFieldWidht()
+    {
+        return fieldWidth_;
+    }
+
 
 
     void Interface::showStatusBar()
     {
         // сбрасывает буфер на стандартный вывод
-        static_assert(1, "hg");
+
         if (!bufferStatusBar_.empty()) {
             push(delimiter('-'));
             while (!bufferStatusBar_.empty()) {
@@ -107,7 +112,7 @@ namespace KHAS {
             showHeader();
 
             // выполняет функции зависящие от полученной команды
-           // functionLaunch();
+            functionLaunch();
 
             // выводит результат функций
             showStatusBar();

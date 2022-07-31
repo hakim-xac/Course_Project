@@ -34,37 +34,13 @@ namespace KHAS {
         /// выводит, необходимый по условию задачи, результат в буфер
         /// </summary>
         template <typename BTree, typename = isBinaryTree_t<BTree>>
-        static void print(const BTree* const tree);
+        void print(const BTree* const tree);
 
         /// <summary>
         /// считывает дерево и добовляет данные в буфер
         /// </summary>
         template <typename BTree, typename = isBinaryTree_t<BTree>>
-        static void showReadTree(const BTree* const tree);
-
-        /// <summary>
-        /// считает хеш-сумму и выводит в буфер
-        /// </summary>
-        template <typename BTree, typename = isBinaryTree_t<BTree>>
-        static void showHashTree(const BTree* const tree);
-
-        /// <summary>
-        /// считает высоту дерева и выводит в буфер
-        /// </summary>
-        template <typename BTree, typename = isBinaryTree_t<BTree>>
-        static void showHeightTree(const BTree* const tree);
-
-        /// <summary>
-        /// считает размер дерева
-        /// </summary>
-        template <typename BTree, typename = isBinaryTree_t<BTree>>
-        static void showSizeTree(const BTree* const tree);
-
-        /// <summary>
-        /// выводит среднюю высоту дерева
-        /// </summary>
-        template <typename BTree, typename = isBinaryTree_t<BTree>>
-        static void showMiddleHeightTree(const BTree* const tree);
+        void showReadTree(const BTree* const tree);
 
         /// <summary>
         /// выполняет функцию, в зависимости от команды
@@ -82,20 +58,24 @@ namespace KHAS {
         void printView();
 
         /// <summary>
-        /// 
+        /// вывод в буфер, ответ на задачу курсового проекта
         /// </summary>
-        template <typename T>
-        bool readFromStream(FILE* fn, T&& t, std::size_t size);
+        void printViewCourceTask();
 
         /// <summary>
         /// 
         /// </summary>
-        std::pair<DatabaseEntry, bool> fromFileToDatabaseEntry(FILE* fn);
+        std::pair<DatabaseEntry, bool> fromFileToDatabaseEntry(std::ifstream& in);
 
         /// <summary>
         /// 
         /// </summary>
         DatabaseEntry changingFieldEncoding(DatabaseEntry&& db);
+
+        /// <summary>
+        /// 
+        /// </summary>
+        static std::vector <DatabaseEntry> uniqueDatabaseEntry(const std::vector<DatabaseEntry>& vec);
     public:
         TaskExecution();
         ~TaskExecution();

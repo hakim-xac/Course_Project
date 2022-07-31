@@ -7,13 +7,19 @@ namespace KHAS {
 
 	struct DatabaseEntry {
 
+	public:
+
 		char author[13]{};
 		char header[33]{};
 		char publishing_house[17]{};
 		short year{};
 		short pages_count{};
-		friend std::ostream& operator << (std::ostream& out, const DatabaseEntry& db);
 
+		std::string to_string() const;
+		friend std::istream& operator >> (std::istream& in, DatabaseEntry& db);
 	};
-	
+
+	bool operator == (const DatabaseEntry& lhs, const DatabaseEntry& rhs);
+	bool operator< (const DatabaseEntry& lhs, const DatabaseEntry& rhs);
+	bool operator> (const DatabaseEntry& lhs, const DatabaseEntry& rhs);
 }
