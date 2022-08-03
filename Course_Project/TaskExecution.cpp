@@ -80,13 +80,15 @@ namespace KHAS {
         }
 
         push(delimiter('='));
+        push(bufferItem("Автор"s
+            , "    Заглавие"s
+            , "       Издательство"s
+            , "       Год      к-во стр"s));
+
+        push(delimiter('-'));
+
         for (auto&& elem: arr) {
-            push(bufferItem("Автор:"s, std::string(elem.author)));
-            push(bufferItem("Заглавие:"s, std::string(elem.header)));
-            push(bufferItem("Издательство:"s, std::string(elem.publishing_house)));
-            push(bufferItem("Год издания:"s, std::to_string(elem.year)));
-            push(bufferItem("Кол-во страниц:"s, std::to_string(elem.pages_count)));
-            push(delimiter('-'));
+            push(bufferItem(elem.to_string()));
         }
         push(delimiter('='));
 
