@@ -1,9 +1,7 @@
 #include "TaskExecution.h"
 #include <Windows.h>
-#include <algorithm>
-#include <vector>
 #include <array>
-#include <cassert>
+#include <limits>
 
 namespace KHAS {
 
@@ -14,8 +12,8 @@ namespace KHAS {
 
     void TaskExecution::functionLaunch()
     {
-        //printView();
         printViewCourceTask();
+        findPublishingHouse();
     }
 
     std::pair<DatabaseEntry, bool> TaskExecution::fromFileToDatabaseEntry(std::ifstream& in)
@@ -40,11 +38,68 @@ namespace KHAS {
         return db2;
     }
 
+    bool TaskExecution::readFromConsole(std::string&& header, std::string& field)
+    {
+        // добавляет отформатированные строки в буфер
+        pushToBuffer(delimiter('='));
+        pushToBuffer(bufferItem(header));
+        pushToBuffer(delimiter('-'));
+        // сбрасывает на вывод в консоль
+        show();
+
+        std::cout << std::string(getFieldWidht(), '_')
+            << std::string(getFieldWidht() - 4, '\b');
+        char tmp[17]{}, tmp2[17]{};
+
+        std::cin.getline(tmp, sizeof tmp, '\n');
+
+        if (std::cin.fail()) {
+            std::cin.clear();
+            std::cin.ignore(1024, '\n');
+            field.clear();
+            return false;
+        }
+        OemToCharBuffA(tmp, tmp2, sizeof tmp2);
+        field = tmp2;
+        return true;
+    }
+
+    void TaskExecution::findPublishingHouse()
+    {
+        if (publishing_house_name_.empty() || lastname_author_.empty()) return;
+
+        using namespace std::literals;
+
+        std::vector<DatabaseEntry> arr{ avlTree_->find(publishing_house_name_, lastname_author_) };
+
+        if (!arr.size()) {
+            push(delimiter('-'));
+            push(bufferItem("С текущими данными, нет результатов!"s));
+            push(delimiter('-'));
+            return;
+        }
+
+        push(delimiter('='));
+        for (auto&& elem: arr) {
+            push(bufferItem("Автор:"s, std::string(elem.author)));
+            push(bufferItem("Заглавие:"s, std::string(elem.header)));
+            push(bufferItem("Издательство:"s, std::string(elem.publishing_house)));
+            push(bufferItem("Год издания:"s, std::to_string(elem.year)));
+            push(bufferItem("Кол-во страниц:"s, std::to_string(elem.pages_count)));
+            push(delimiter('-'));
+        }
+        push(delimiter('='));
+
+
+    }
+
     TaskExecution
         ::TaskExecution()
         : Interface()
         , vec_db_()
-        , avlTree_(create("BASE1.DAT")) { 
+        , avlTree_(create("BASE1.DAT")) 
+        , publishing_house_name_()
+        , lastname_author_() {
     
     }
 
@@ -72,6 +127,7 @@ namespace KHAS {
         using namespace std::literals;
 
         std::vector<DatabaseEntry> arr{ avlTree_->printUnique() };
+
         push(delimiter('='));
         push(bufferItem("Данные о количестве и названиях всех издательств"s));
         push(delimiter('='));
@@ -87,38 +143,22 @@ namespace KHAS {
         push(delimiter('-'));
         
 
-        const int deliter{ 3 };
-        for (size_t i{}, ie{ arr.size() / deliter }; i < ie + 1; ++i) {
-
-            std::array<std::string, deliter> tmp_arr{};
-
-            for (int j{}, je{ deliter }; j < je; ++j) {
-
-                auto index{ i * deliter + j };
-                if(index < arr.size()) tmp_arr[j] = std::string(arr[index].publishing_house);
-
-            }
-            push(bufferItem(tmp_arr[0], tmp_arr[1], tmp_arr[2]));
+        for (auto&& elem: arr) {
+            push(bufferItem(std::string(elem.publishing_house)));
         }
     }
 
-    void TaskExecution::showMenu() const
+    void TaskExecution::showMenu()
     {
-        using namespace std::literals;
+        publishing_house_name_.clear();
+        lastname_author_.clear();
+        if (!readFromConsole("Введите название издательства", publishing_house_name_)
+            || !readFromConsole("Введите фамилию автора", lastname_author_)) {
 
-        // добавляет отформатированные строки в буфер
-        pushToBuffer(delimiter('='));
-        pushToBuffer(bufferItem("Меню"s));
-        pushToBuffer(delimiter('-'));
-        pushToBuffer(bufferItem("Клавиша"s, "Команда"s));
-        pushToBuffer(delimiter('-'));
-        pushToBuffer(bufferItem("1"s, "Распечать данные о дереве"s));
-        pushToBuffer(delimiter('-'));
-        pushToBuffer(bufferItem("9"s, "Закрыть приложение"s));
-        pushToBuffer(delimiter('='));
+            using namespace std::literals;
 
-        // сбрасывает на вывод в консоль
-        show();
+            push(bufferItem("Ошибка ввода данных!"s));
+        }        
     }
 
 }

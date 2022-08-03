@@ -29,22 +29,22 @@ namespace KHAS {
 
     void Interface::readCommand()
     {
-        std::cout << std::string(fieldWidth_, '_')
-            << std::string(fieldWidth_, '\b')
-            << "¬ведите команду:";
+        //std::cout << std::string(fieldWidth_, '_')
+        //    << std::string(fieldWidth_, '\b')
+        //    << "¬ведите команду:";
 
-        // получаем один символ, остальное очищаем
-        int cmd{ std::cin.get() };
-        std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+        //// получаем один символ, остальное очищаем
+        //int cmd{ std::cin.get() };
+        //std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
 
-        // определ€ем команду
-        switch (cmd)
-        {
-        case 49: activeCommand_ = InputCommand::Print;      break; // 1 
-        case 57: activeCommand_ = InputCommand::Exit;       break; // 9
+        //// определ€ем команду
+        //switch (cmd)
+        //{
+        //case 49: activeCommand_ = InputCommand::Print;      break; // 1 
+        //case 57: activeCommand_ = InputCommand::Exit;       break; // 9
 
-        default: activeCommand_ = InputCommand::ErrorCommands;            
-        }
+        //default: activeCommand_ = InputCommand::ErrorCommands;            
+        //}
         
     }
 
@@ -77,25 +77,13 @@ namespace KHAS {
         // сбрасывает буфер на стандартный вывод
 
         if (!bufferStatusBar_.empty()) {
-            push(delimiter('-'));
+
             while (!bufferStatusBar_.empty()) {
                 std::cout << bufferStatusBar_.front() << "\n";
                 bufferStatusBar_.pop();
             }
             std::flush(std::cout);
         }
-    }
-
-    InputCommand Interface::getActiveCommand() const
-    {
-        // возвращает активную команду
-        return activeCommand_;
-    }
-
-    void Interface::clearActiveCommand()
-    {
-        // очищает активную команду
-        activeCommand_ = InputCommand::NoCommand;
     }
 
 
@@ -121,7 +109,7 @@ namespace KHAS {
             showMenu();
 
             // получает команду от пользовател€
-            readCommand();
+            //readCommand();
         }
     }
 

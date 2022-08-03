@@ -1,5 +1,4 @@
 #pragma once
-#include "Enums.h"
 #include <iostream>
 #include <iomanip>
 #include <sstream>
@@ -46,11 +45,6 @@ namespace KHAS {
         /// ширина строк на стандартный вывод
         /// </summary>
         static inline size_t fieldWidth_{ 100 };
-
-        /// <summary>
-        /// активная команда
-        /// </summary>
-        static inline InputCommand activeCommand_{ InputCommand::NoCommand };
 
     private:
 
@@ -122,7 +116,7 @@ namespace KHAS {
         /// <summary>
         /// добавляет меню для пользователя, в буфер
         /// </summary>
-        virtual void showMenu() const = 0;
+        virtual void showMenu() = 0;
 
         /// <summary>
         /// сбрасывает буфер на стандартный вывод
@@ -138,16 +132,6 @@ namespace KHAS {
         /// сбрасывает буфер для статус бара на стандартный вывод
         /// </summary>
         static void showStatusBar();
-
-        /// <summary>
-        /// возвращает элемент перечисления активной команды
-        /// </summary>
-        InputCommand getActiveCommand() const;
-
-        /// <summary>
-        /// очистка активной команды
-        /// </summary>
-        void clearActiveCommand();
 
     public:
 

@@ -1,6 +1,5 @@
 #pragma once
 
-#include "Enums.h"
 #include <sstream>
 #include <vector>
 #include "DataBase.h"
@@ -23,6 +22,12 @@ namespace KHAS {
 		int getBalanceFactor(Node* root);
 		std::stringstream readTree(const Node* const root) const;
 		void uniqueReadTree(const Node* const root, std::vector<DatabaseEntry>& vdb) const;
+
+		void findTree(const Node* const root
+			, const std::string& publishing_house
+			, const std::string& lastname
+			, std::vector<DatabaseEntry>& vdb) const;
+
 		void deleteTree(Node* root);
 		int  heightTree(const Node* const root) const;
 		int sizeTree(const Node* const root) const;
@@ -32,6 +37,7 @@ namespace KHAS {
 		void deleteTree();
 		std::stringstream print() const;
 		std::vector<DatabaseEntry> printUnique() const;
+		std::vector<DatabaseEntry> find(const std::string& publishing_house, const std::string& lastname) const;
 		int  getHeightTree() const;
 		int getSize() const;
 

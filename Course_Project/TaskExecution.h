@@ -1,9 +1,9 @@
 #pragma once
 #include <fstream>
 #include <vector>
+#include <string>
 #include "Interface.h"
 #include "BinaryTree.h"
-#include "Enums.h"
 #include "DataBase.h"
 
 namespace KHAS {
@@ -15,7 +15,8 @@ namespace KHAS {
 
         std::vector<DatabaseEntry> vec_db_;
         BinaryTree* avlTree_;
-
+        std::string publishing_house_name_;
+        std::string lastname_author_;
 
     private:
 
@@ -71,10 +72,20 @@ namespace KHAS {
         /// 
         /// </summary>
         DatabaseEntry changingFieldEncoding(DatabaseEntry&& db);
+
+        /// <summary>
+        /// 
+        /// </summary>
+        bool readFromConsole(std::string&& header, std::string& field);
+
+        /// <summary>
+        /// 
+        /// </summary>
+        void findPublishingHouse();
     public:
         TaskExecution();
         ~TaskExecution();
-        void showMenu() const override;
+        void showMenu() override;
 
     };
 }
