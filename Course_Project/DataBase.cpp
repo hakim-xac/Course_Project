@@ -26,10 +26,10 @@ namespace KHAS {
 
     std::string DatabaseEntry::to_string() const
     {
-        return std::string(author) + "   |   "
-            + std::string(header) + "   |   "
-            + std::string(publishing_house) + "   |   "
-            + std::to_string(year) + "   |   "
+        return std::string(author)          +   "   |   "
+            + std::string(header)           +   "   |   "
+            + std::string(publishing_house) +   "   |   "
+            + std::to_string(year)          +   "   |   "
             + std::to_string(pages_count);
     }
 

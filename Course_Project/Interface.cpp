@@ -103,7 +103,7 @@ namespace KHAS {
     void Interface::view()
     {
         // запускает цикл и выполняет команды полученные от пользователя
-        //while (true) {
+        while (true) {
 
             // очищает экран
             system("cls");
@@ -118,11 +118,11 @@ namespace KHAS {
             showStatusBar();
 
             // выводит меню пользователю
-            //showMenu();
+            showMenu();
 
             // получает команду от пользователя
-            //readCommand();
-        //}
+            readCommand();
+        }
     }
 
 }

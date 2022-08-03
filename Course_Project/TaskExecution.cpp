@@ -40,26 +40,6 @@ namespace KHAS {
         return db2;
     }
 
-    std::vector<DatabaseEntry> TaskExecution::uniqueDatabaseEntry(const std::vector<DatabaseEntry>& vec)
-    {
-        assert(vec.size() != 0);
-        std::vector<DatabaseEntry> arr;
-        arr.reserve(vec.size());
-        for (auto&& from : vec) {
-            bool is_unique{ true };
-            for (auto&& to : arr) {
-                if (strcmp(from.publishing_house, to.publishing_house) == 0) {
-                    is_unique = false;
-                    break;
-                }
-            }
-            if (is_unique) arr.emplace_back(from);
-        }
-        arr.shrink_to_fit();
-
-        return arr;
-    }
-
     TaskExecution
         ::TaskExecution()
         : Interface()
@@ -91,7 +71,7 @@ namespace KHAS {
     {
         using namespace std::literals;
 
-        std::vector<DatabaseEntry> arr{ uniqueDatabaseEntry(vec_db_) };
+        std::vector<DatabaseEntry> arr{ avlTree_->printUnique() };
         push(delimiter('='));
         push(bufferItem("ƒанные о количестве и названи€х всех издательств"s));
         push(delimiter('='));

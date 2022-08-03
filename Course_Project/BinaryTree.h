@@ -22,17 +22,18 @@ namespace KHAS {
 		int getHeight(const Node* const root) const;
 		int getBalanceFactor(Node* root);
 		std::stringstream readTree(const Node* const root) const;
+		void uniqueReadTree(const Node* const root, std::vector<DatabaseEntry>& vdb) const;
 		void deleteTree(Node* root);
+		int  heightTree(const Node* const root) const;
+		int sizeTree(const Node* const root) const;
 
 	public:
 		BinaryTree(const std::vector<DatabaseEntry>& db);
 		void deleteTree();
 		std::stringstream print() const;
+		std::vector<DatabaseEntry> printUnique() const;
+		int  getHeightTree() const;
+		int getSize() const;
 
-		int getSize() const { return 42;  }
-		int hash() const { return 42;  };
-		int  getHeightTree() const { return 42; };
-		int  getMiddleHeight() const { return 42;  };
-		TypeTree  getTypeTree() const { return TypeTree::AVL;  };
 	};
 }

@@ -71,11 +71,6 @@ namespace KHAS {
         /// 
         /// </summary>
         DatabaseEntry changingFieldEncoding(DatabaseEntry&& db);
-
-        /// <summary>
-        /// 
-        /// </summary>
-        static std::vector <DatabaseEntry> uniqueDatabaseEntry(const std::vector<DatabaseEntry>& vec);
     public:
         TaskExecution();
         ~TaskExecution();

@@ -96,6 +96,18 @@ namespace KHAS {
 		return ss;
 	}
 
+	void BinaryTree::uniqueReadTree(const Node* const root, std::vector<DatabaseEntry>& vdb) const
+	{
+		if (!root) return;
+
+		if (root->left) uniqueReadTree(root->left, vdb);
+		for (auto&& elem: vdb) {
+			if (root->data == elem) return;
+		}
+		vdb.push_back(root->data);
+		if (root->right) uniqueReadTree(root->right, vdb);
+	}
+
 	BinaryTree::BinaryTree(const std::vector<DatabaseEntry>& db)
 		: root_(nullptr)
 	{
@@ -120,8 +132,46 @@ namespace KHAS {
 		}
 	}
 
+	int BinaryTree::heightTree(const Node* const root) const
+	{
+		if (!root) return 0;
+		int left_height{ heightTree(root->left) };
+		int right_height{ heightTree(root->right) };
+
+		return (left_height > right_height ? left_height : right_height) + 1;
+	}
+
+	int BinaryTree::sizeTree(const Node* const root) const
+	{
+		if (!root) return 0;
+		return 1 + sizeTree(root->left) + sizeTree(root->right);
+	}
+
 	std::stringstream BinaryTree::print() const
 	{
 		return readTree(root_);
+	}
+
+	std::vector<DatabaseEntry> BinaryTree::printUnique() const
+	{
+		auto size{ getSize() };
+		if (!size) return {};
+
+		std::vector<DatabaseEntry> vdb;
+		vdb.reserve(size);
+		uniqueReadTree(root_, vdb);
+		return vdb;
+	}
+
+	int BinaryTree::getHeightTree() const
+	{
+		assert(root_);
+		return heightTree(root_);
+	}
+
+	int BinaryTree::getSize() const
+	{
+		assert(root_);
+		return sizeTree(root_);
 	}
 }
