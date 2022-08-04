@@ -107,8 +107,8 @@ namespace KHAS {
         std::string ph{ root->data.publishing_house };
         std::string author{ root->data.author };
 
-        if (ph.find(publishing_house) != std::string::npos
-            && author.find(lastname) != std::string::npos) {
+        if (std::equal(std::begin(publishing_house), std::end(publishing_house), std::begin(ph))
+            && std::equal(std::begin(lastname), std::end(lastname), std::begin(author))) {
             vdb.emplace_back(root->data);
         }
 
