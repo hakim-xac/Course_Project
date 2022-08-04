@@ -1,13 +1,14 @@
 #include "BinaryTree.h"
 #include <cassert>
+#include <vector>
 namespace KHAS {
 
-    bool BinaryTree::toAVL(const std::vector<DatabaseEntry>& db)
+    bool BinaryTree::toAVL(const std::vector<DatabaseEntry>& db, Node*& root)
     {
         if (db.size() == 0) return false;
 
         for (auto&& elem: db) {
-            root_ = insertToAVL(elem, root_);
+            root = insertToAVL(elem, root);
         }
         return true;
     }
@@ -74,7 +75,7 @@ namespace KHAS {
         root->height = (height_left > height_right ? height_left : height_right) + 1;
     }
 
-    int BinaryTree::getHeight(const Node* const root) const
+    int BinaryTree::getHeight(const Node* const root)
     {
         if (!root) return 0;
         return root->height;
@@ -86,17 +87,7 @@ namespace KHAS {
         return getHeight(root->right) - getHeight(root->left);
     }
 
-    std::stringstream BinaryTree::readTree(const Node* const root) const
-    {
-        if (!root) return std::stringstream{};
-        std::stringstream ss;
-        if (root->left) ss << readTree(root->left).str();
-        ss << root->data.to_string() << "\n";
-        if (root->right) ss << readTree(root->right).str();
-        return ss;
-    }
-
-    void BinaryTree::uniqueReadTree(const Node* const root, std::vector<DatabaseEntry>& vdb) const
+    void BinaryTree::uniqueReadTree(const Node* const root, std::vector<DatabaseEntry>& vdb)
     {
         if (!root) return;
 
@@ -108,7 +99,7 @@ namespace KHAS {
         if (root->right) uniqueReadTree(root->right, vdb);
     }
 
-    void BinaryTree::findTree(const Node* const root, const std::string& publishing_house, const std::string& lastname, std::vector<DatabaseEntry>& vdb) const
+    void BinaryTree::findTree(const Node* const root, const std::string& publishing_house, const std::string& lastname, std::vector<DatabaseEntry>& vdb)
     {
         if (!root) return;
 
@@ -127,7 +118,7 @@ namespace KHAS {
     BinaryTree::BinaryTree(const std::vector<DatabaseEntry>& db)
         : root_(nullptr)
     {
-        if (!toAVL(db)) {
+        if (!toAVL(db, root_)) {
             std::cout << "ньхайю! мебнглнфмн янгдюрэ депебн! " << std::endl;
             system("pause");
             exit(1);
@@ -148,7 +139,7 @@ namespace KHAS {
         }
     }
 
-    int BinaryTree::heightTree(const Node* const root) const
+    int BinaryTree::heightTree(const Node* const root)
     {
         if (!root) return 0;
         int left_height{ heightTree(root->left) };
@@ -157,15 +148,10 @@ namespace KHAS {
         return (left_height > right_height ? left_height : right_height) + 1;
     }
 
-    int BinaryTree::sizeTree(const Node* const root) const
+    int BinaryTree::sizeTree(const Node* const root)
     {
         if (!root) return 0;
         return 1 + sizeTree(root->left) + sizeTree(root->right);
-    }
-
-    std::stringstream BinaryTree::print() const
-    {
-        return readTree(root_);
     }
 
     std::vector<DatabaseEntry> BinaryTree::printUnique() const
@@ -190,12 +176,6 @@ namespace KHAS {
         findTree(root_, publishing_house, lastname, vdb);
         vdb.shrink_to_fit();
         return vdb;
-    }
-
-    int BinaryTree::getHeightTree() const
-    {
-        assert(root_);
-        return heightTree(root_);
     }
 
     int BinaryTree::getSize() const

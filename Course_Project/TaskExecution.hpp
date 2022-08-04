@@ -22,47 +22,6 @@ namespace KHAS {
             std::tie(db, is_db) = fromFileToDatabaseEntry(base_file);
         }
 
-        /*for (auto&& elem: vec_db_) {
-            std::cout << elem << "\n";
-        }
-
-        system("pause");*/
-
         return new (std::nothrow) BinaryTree(vec_db_);
-    }
-
-    template<typename BTree, typename T2>
-    inline void TaskExecution::print(const BTree* const tree)
-    {        
-        showReadTree(tree);
-        showStatusBar();
-
-    }
-
-    template<typename BTree, typename T2>
-    inline void TaskExecution::showReadTree(const BTree* const tree)
-    {
-        using namespace std::literals;
-
-
-        push(delimiter('='));
-        push(bufferItem("Вывод дерева"s));
-        push(delimiter('='));
-
-        //do {
-        //    DatabaseEntry db_tmp{};
-        //    ss >> db_tmp;
-        //    auto s{ db_tmp.to_string() };
-
-        //    if (ss.good()) {
-        //        push(bufferItem(s));
-        //        push(delimiter('-'));
-        //    }
-        //} while (ss.good());
-
-        for (auto&& elem: vec_db_) {
-            push(bufferItem(elem.to_string()));
-            push(delimiter('-'));
-        }
     }
 }

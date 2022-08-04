@@ -5,15 +5,11 @@
 
 namespace KHAS {
 
-    bool TaskExecution::checkIsTree()
-    {
-        return (avlTree_ != nullptr);
-    }
 
     void TaskExecution::functionLaunch()
     {
         printViewCourceTask();
-        findPublishingHouse();
+        showFindPublishingHouse();
     }
 
     std::pair<DatabaseEntry, bool> TaskExecution::fromFileToDatabaseEntry(std::ifstream& in)
@@ -64,7 +60,7 @@ namespace KHAS {
         return true;
     }
 
-    void TaskExecution::findPublishingHouse()
+    void TaskExecution::showFindPublishingHouse()
     {
         if (publishing_house_name_.empty() || lastname_author_.empty()) return;
 
@@ -111,17 +107,6 @@ namespace KHAS {
         avlTree_->deleteTree();
         delete avlTree_;
         avlTree_ = nullptr;
-    }
-
-    void TaskExecution::quit() const
-    {
-        system("cls");
-        exit(0);
-    }
-
-    void TaskExecution::printView()
-    {
-        print(avlTree_);
     }
 
     void TaskExecution::printViewCourceTask()

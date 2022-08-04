@@ -1,5 +1,4 @@
 #include "DataBase.h"
-#include <Windows.h>
 
 namespace KHAS {
 
@@ -17,11 +16,6 @@ namespace KHAS {
     bool operator<(const DatabaseEntry& lhs, const DatabaseEntry& rhs)
     {
         return strcmp(lhs.author, rhs.author) < 0;
-    }
-
-    bool operator>(const DatabaseEntry& lhs, const DatabaseEntry& rhs)
-    {
-        return strcmp(lhs.author, rhs.author) > 0;
     }
 
     std::string DatabaseEntry::to_string() const

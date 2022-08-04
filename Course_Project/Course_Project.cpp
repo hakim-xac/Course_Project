@@ -1,5 +1,4 @@
-﻿#include "Course_Project.h"
-#include "TaskExecution.h"
+﻿#include "TaskExecution.h"
 
 int main()
 {

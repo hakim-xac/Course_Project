@@ -18,9 +18,10 @@ namespace KHAS {
         // уровень баланса
         int height{};
 
-
+        // запрещает создание пустой ноды
         Node() = delete;
 
+        // создаем ноду с данными
         Node(const DatabaseEntry& value, int height = 1)
             : left(nullptr)
             , right(nullptr)
